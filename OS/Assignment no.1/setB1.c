@@ -1,74 +1,76 @@
 #include<stdio.h>
-#include<sys/types.h>
-#include<unistd.h>
 #include<sys/wait.h>
-void bubble_sort();
-void insertion_sort();
+#include<unistd.h>
 int n,a[10];
+void bubble();
+void insertion();
 int main()
 {
-  int i;
-  printf("\n Enter size of array:");
-  scanf("%d",&n);
-  printf("\n Enter the size of element:");
-  for(i=0;i<n;i++)
-  scanf("%d",&a[i]);
-  printf("Enter size of array:");
-  for(i=0;i<n;i++)
-  printf("%d\t",a[i]);
-  scanf("%d\t",a[i]);
-  pid_t pid;
-  pid=fork();
-      if (pid==0)
-      {
-        printf("\n Child created");
-        printf("\n my id %d\n",getpid());
-        bubble_sort();
-        printf("\n sorted array element");
-        for(i=0;i<n;i++)
-            printf("%d\t",a[i]);
-            printf("\n");
-      }
-      else
-         if(pid>0)
-         {
-           wait(NULL);
-           printf("\n parenr \n");
-           printf("\n myid %d\n",getpid());
-           insertion_sort();
-           printf("\n sorted array element:");
-           for(i=0;i<n;i++)
-               printf("%d\t",a[i]);
-         }
-         else
-             printf("\n unsuccessful process");
-}
-void bubble_sort()
-{
-  int i,j,temp;
-  for(i=0;i<n;i++)
-      for(j=0;j<n-1-i;j++)
-      {
-         if(a[j]>a[j+1])
-         {
-            temp=a[j];
-            a[j]=a[j+1];
-            a[j+1]=temp;
-         }
-      }
-}
-void insertion_sort()
-{
- int i,j,temp;
- for(i=0;i<n;i++)
- {
-  temp=a[i];
-  j=i-1;
-  for(j>=0;a[j]>temp;j--)
-  {
-     a[j+1]=a[j];
-  }
-  a[j+1]=temp;
- }
+     int i;
+     printf("\nEnter array size: ");
+     scanf("%d",&n);
+     for (i=0;i<n;i++)
+     {
+          scanf("%d",&a[i]);
+     }
+     int pid=fork();
+     if (pid==0)
+     {
+          printf("Child id : %d\n",getpid());
+          insertion();
+          printf("\n Sorted array elements are: ");
+          for (i=0;i<n;i++)
+              printf("\t%d",a[i]);
+          printf("\n");    
+     }
+     else
+     {
+         wait(NULL);
+         printf("Parent Process id : %d\n",getppid());
+         bubble();
+         printf("\n Sorted array Elements are :");
+         for (i=0;i<n;i++)
+              printf("\t%d",a[i]);
+          printf("\n"); 
+     }
 }
 
+void bubble()
+{
+     int i,j,temp;
+     for (i=0;i<n;i++)
+         for (j=i+1;j<n;j++)
+             if (a[i]>a[j])
+             {
+                temp=a[i];
+                a[i]=a[j];
+                a[j]=temp;
+             }
+}
+
+void insertion()
+{
+     int i,j,k;
+     for(i=1;i<n;i++)
+     {
+        k=a[i];
+        j=i-1;
+        while(j>=0 && a[j]>k)
+        {
+             a[j+1]=a[j];
+             j--;
+        }
+        a[j+1]=k; 
+     }
+}
+
+/*
+Enter array size: 5
+8 9 0 2 4
+Child id : 1187
+
+ Sorted array elements are:     0       2       4       8       9
+Parent Process id : 1182
+
+ Sorted array Elements are :    0       2       4       8       9
+*/
