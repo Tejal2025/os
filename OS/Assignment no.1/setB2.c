@@ -1,43 +1,37 @@
 #include<stdio.h>
-#include<sys/types.h>
-#include<unistd.h>
 #include<sys/wait.h>
-
-void childprocess(int);
-void parentprocess(int);
-
-int main()
+#include<unistd.h>
+void cp();
+void pp();
+int  main()
 {
- pid_t pid;
- pid=fork();
- 
- if(pid==0)
- {
-  sleep(3);
-  parentprocess(pid);
- }
- else
-    printf("\n unsuccessfull");
+     pid_t pid;
+     pid=fork();
+     if (pid ==0 )
+     {
+        sleep(3);
+        cp();
+     }
+     else
+     {
+         pp();
+     }
+     return 0;
 }
-
-void childprocess(int pid)
+void cp()
 {
-  printf("I am a child process\n");
-  printf("\n myid:%d\n",getpid());
-  printf("my parent id:%d\n",getppid());
+      printf("\nI am child Process: ");
+     printf("\nParent id : %d\n",getpid());
 }
-void parentprocess(int pid)
+void pp()
 {
- printf(" I am parent process\n");
- printf("my id:%d\n",getpid());
- printf("my child id:%d\n",pid);
+      printf("\nI am Parent Process: ");
+     printf("\nChild id : %d\n",getppid());
 }
-   
-   
    
 /*
 OUTPUT:-
-ty8@pc41:~/Ty 8/OS/Assignment1$  I am parent process
-my id:17904
-my child id:0
+ty8@pc41:~/Ty 8/OS/Assignment1$  I am Parent Process: 
+Child id : 2194
+
 */
